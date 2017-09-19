@@ -13,15 +13,26 @@ unsigned srl(unsigned x, int k) {
   return xsra & ~mask;
 }
 
-int sra(int x, int k) {
-  int xsrl = (unsigned) x >> k;
+/*
+*int sra(int x, int k) {
+*  int xsrl = (unsigned) x >> k;
+*
+*  int w = sizeof(int) << 3;
+*  int mask = (int) -1 << (w - k);
+*  if (x < 0) {
+*    return xsrl | mask;
+*  }
+*  return xsrl;
+*}
+*/
 
-  int w = sizeof(int) << 3;
-  int mask = (int) -1 << (w - k);
-  if (x < 0) {
+int sra(int x, int k) {
+    int xsrl = (unsigned) x >> k;
+    int w = sizeof(int) << 3;
+    int mask = 1 << (w - k);
+    mask = (mask & xsrl) == mask;
+    mask = (int)(-mask) << (w - k);
     return xsrl | mask;
-  }
-  return xsrl;
 }
 
 int main(int argc, char* argv[]) {
